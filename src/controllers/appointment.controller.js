@@ -8,9 +8,13 @@ export const getAppointments = async (req, res) => {
 }
 
 export const getAppointment = async (req, res) => {
-    const appointmentFound = await Appointment.findById(req.params.id).populate('user')
-    if(!appointmentFound) return res.status(404).json({message: "Appointment not found"})
-    res.json(appointmentFound)  
+    try {
+        const appointmentFound = await Appointment.findById(req.params.id).populate('user')
+        if (!appointmentFound) return res.status(404).json({ message: "Appointment not found" })
+        res.json(appointmentFound)
+    } catch (error) {
+        return res.status(404).json({ message: "Appointment not found" })
+    }
 }
 
 
@@ -33,16 +37,27 @@ export const createAppointment = async (req, res) => {
 }
 
 export const updateAppointments = async (req, res) => {
-    const appointmentFound = await Appointment.findByIdAndUpdate(req.params.id, req.body, {
-        new: true
-    })
+    try {
 
-    if (!appointmentFound) return res.status(404).json({ message: "Appointment not found" })
-    res.json(appointmentFound)
+        const appointmentFound = await Appointment.findByIdAndUpdate(req.params.id, req.body, {
+            new: true
+        })
+
+        if (!appointmentFound) return res.status(404).json({ message: "Appointment not found" })
+        res.json(appointmentFound)
+    }
+    catch (error) {
+        return res.status(404).json({ message: "Appointment not found" })
+    }
 }
 
 export const deleteAppointments = async (req, res) => {
-    const appointmentFound = await Appointment.findByIdAndDelete(req.params.id)
-    if (!appointmentFound) return res.status(404).json({ message: "Appointment not found" })
-    return res.sendStatus(204)
+    try {
+
+        const appointmentFound = await Appointment.findByIdAndDelete(req.params.id)
+        if (!appointmentFound) return res.status(404).json({ message: "Appointment not found" })
+        return res.sendStatus(204)
+    } catch (error) {
+        return res.status(404).json({ message: "Appointment not found" })
+    }
 }
